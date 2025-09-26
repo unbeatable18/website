@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synergy | An Operating System for Society</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-color: #FFFFFF;
+            --bg-subtle: #f9fafb;
+            --bg-inverse: #111827;
+            --text-primary: #1A1A1A;
+            --text-secondary: #6B7280;
+            --text-inverse: #F9FAFB;
+            --accent-color: #0057FF;
+            --border-color: #E5E7EB;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0d1117;
+            --bg-subtle: #161b22;
+            --bg-inverse: #F9FAFB;
+            --text-primary: #F0F6FC;
+            --text-secondary: #8b949e;
+            --text-inverse: #1A1A1A;
+            --accent-color: #58a6ff;
+            --border-color: #30363d;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        .bg-main { background-color: var(--bg-color); }
+        .bg-subtle { background-color: var(--bg-subtle); }
+        .bg-inverse { background-color: var(--bg-inverse); }
+        .text-primary { color: var(--text-primary); }
+        .text-secondary { color: var(--text-secondary); }
+        .text-inverse { color: var(--text-inverse); }
+        .accent-text { color: var(--accent-color); }
+        .border-main { border-color: var(--border-color); }
+
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .section-title {
+            @apply font-serif text-5xl md:text-6xl lg:text-7xl font-bold text-primary mb-10 tracking-tighter;
+        }
+        
+        .section-eyebrow {
+            @apply font-semibold text-sm accent-text mb-4 tracking-widest uppercase;
+        }
+
+        .section-subtitle {
+            @apply text-lg text-secondary max-w-3xl mx-auto;
+        }
+
+        .cta-button {
+            @apply inline-block bg-blue-600 text-white font-semibold py-3 px-10 rounded-full text-base hover:bg-blue-700 transition-all duration-300 transform hover:scale-105;
+        }
+
+        [data-theme="dark"] .cta-button {
+             background-color: var(--accent-color);
+             color: #0d1117;
+        }
+        [data-theme="dark"] .cta-button:hover {
+             opacity: 0.9;
+        }
+
+
+        .nav-link {
+            @apply text-secondary hover:accent-text transition-colors duration-300 font-medium tracking-wide text-sm;
+        }
+        
+        .has-fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #hero-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        .animation-canvas {
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-subtle);
+            border-radius: 0.5rem;
+        }
+        
+        .os-wrapper {
+            display: inline-block;
+            white-space: nowrap;
+        }
+        .os-char {
+            display: inline-block;
+        }
+        .os-middle {
+            display: inline-block;
+            transition: transform 0.5s cubic-bezier(0.17, 0.67, 0.83, 0.67), opacity 0.5s cubic-bezier(0.17, 0.67, 0.83, 0.67), max-width 0.7s ease-in-out;
+            transform-origin: 50% 100%;
+            max-width: 1ch;
+        }
+        .os-wrapper.animate .os-middle {
+            max-width: 0;
+            opacity: 0;
+            transform: translateY(-20px) scale(0.3);
+        }
+
+    </style>
+</head>
+
+<body class="text-gray-800">
+    
+    <canvas id="hero-canvas"></canvas>
+
+    <!-- Header & Navigation -->
+    <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-between items-center py-5 border-b border-transparent" id="nav-inner">
+                <a href="#home" class="text-3xl font-serif font-bold text-primary">
+                    Synergy<span class="accent-text">.</span>
+                </a>
+                <nav class="hidden md:flex items-center space-x-10">
+                    <a href="#about" class="nav-link">The Thesis</a>
+                    <a href="#motivation" class="nav-link">My Motivation</a>
+                    <a href="#synthesis" class="nav-link">Operational Lenses</a>
+                    <a href="#approach" class="nav-link">The Approach</a>
+                    <a href="#join" class="nav-link">The Alliance</a>
+                    <a href="#founder" class="nav-link">Our Genesis</a>
+                    <button id="theme-toggle" class="ml-4">
+                        <i id="theme-icon-sun" data-lucide="sun" class="h-5 w-5 text-secondary"></i>
+                        <i id="theme-icon-moon" data-lucide="moon" class="h-5 w-5 text-secondary hidden"></i>
+                    </button>
+                </nav>
+                <button id="mobile-menu-button" class="md:hidden">
+                    <i data-lucide="menu" class="h-6 w-6 text-primary"></i>
+                </button>
+            </div>
+        </div>
+         <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-main px-6 pb-4">
+            <a href="#about" class="block py-2 nav-link text-center">The Thesis</a>
+            <a href="#motivation" class="block py-2 nav-link text-center">My Motivation</a>
+            <a href="#synthesis" class="block py-2 nav-link text-center">Operational Lenses</a>
+            <a href="#approach" class="block py-2 nav-link text-center">The Approach</a>
+            <a href="#join" class="block py-2 nav-link text-center">The Alliance</a>
+            <a href="#founder" class="block py-2 nav-link text-center">Our Genesis</a>
+        </div>
+    </header>
+
+    <main class="relative z-10">
+        <!-- Hero Section -->
+        <section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
+            <div id="hero-overlay" class="absolute inset-0 bg-white/50 z-10 transition-colors duration-300"></div>
+            <div class="container mx-auto px-6 text-center z-20 relative">
+                <h1 id="hero-title" class="font-serif font-bold text-5xl md:text-7xl lg:text-8xl text-primary leading-none mb-6 has-fade-in">
+                    An <span class="os-wrapper">Operating System</span> <br class="hidden md:block" /> for Society.
+                </h1>
+                <p id="hero-subtitle" class="text-lg md:text-xl max-w-3xl mx-auto text-secondary mb-10 opacity-0" style="transition: opacity 1s ease-out;">
+                    a new flywheel for scale.
+                </p>
+                <div id="hero-cta" class="opacity-0" style="transition: opacity 1s ease-out;">
+                    <a href="#about" class="cta-button">Explore The Thesis</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-24 md:py-40 bg-main">
+            <div class="container mx-auto px-6">
+                <div class="has-fade-in text-center">
+                    <p class="section-eyebrow">The Thesis</p>
+                    <h2 class="section-title">A Purposeful Economy.</h2>
+                    <div class="space-y-6 text-secondary text-lg leading-relaxed max-w-4xl mx-auto">
+                        <p>
+                           We are creating purpose out of isolated frameworks again. If economics is real, we believe profit should be a result of community progress—rather than a force that breaks community. Our mission is to build a continuous world by eliminating the fixed costs and barriers to entry that everyone faces.
+                        </p>
+                        <p>
+                           By organizing firms by product through public-private partnerships, we make systems cheaper, predictable, and streamlined. This allows us to re-imagine the middle-man as a distributor, not a controller, redirecting capital toward manufacturing regions and enabling a new layer of personalization. We are bringing experiential wisdom to India to create a society that is both materially prosperous and deeply value-driven.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- My Motivation Section -->
+        <section id="motivation" class="py-24 md:py-40 bg-inverse text-inverse">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-20">
+                    <p class="section-eyebrow" style="color: #93c5fd;">My Motivation</p>
+                    <h2 class="section-title">The Human Cost of Incoherence.</h2>
+                    <p class="section-subtitle">Frameworks designed in isolation are not abstract—they have a real, human cost. This is my story, and this is why we build.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-10">
+                    <div class="bg-subtle p-8 rounded-lg has-fade-in">
+                        <h3 class="font-serif text-2xl font-bold mb-4 text-primary">Incomplete Frameworks, Irreversible Loss</h3>
+                        <p class="text-secondary leading-relaxed">I have seen brilliant individuals, loving family members, pushed to the brink by the pressure of inflexible financial systems. My grandfather's younger brother committed suicide over the pressure of peer debt. Another passed away during the pandemic, unable to repay a loan. When frameworks fail to account for reality, who is there to appeal to? Who listens? Their children are left paying the price for systemic incompleteness.</p>
+                    </div>
+                    <div class="bg-subtle p-8 rounded-lg has-fade-in" style="transition-delay: 200ms;">
+                         <h3 class="font-serif text-2xl font-bold mb-4 text-primary">Negligence by Design</h3>
+                        <p class="text-secondary leading-relaxed">My Nani passed away in the hospital due to a nurse's negligence—a nurse whose presence was dictated by an uncontrollable, rigid framework, not by the wisdom of the collective or the needs of the patient. This is the tragic outcome when isolated systems operate without accountability or a feedback loop from reality.</p>
+                    </div>
+                     <div class="bg-subtle p-8 rounded-lg has-fade-in md:col-span-2" style="transition-delay: 400ms;">
+                         <h3 class="font-serif text-2xl font-bold mb-4 text-primary">The Loneliness of Modernity</h3>
+                        <p class="text-secondary leading-relaxed">Incomplete economic frameworks create deep loneliness. They build walls where bridges should be. The people around us can't help because they are bound by the same rigid structures, forcing them to surpass their own values. We must ask: in the bigger picture, what have these systems truly built for us? It is time to address the exposed incompleteness that so many ignore while solving only the problems in their immediate view.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Operational Lenses Section -->
+        <section id="synthesis" class="py-24 md:py-40 bg-subtle">
+             <div class="container mx-auto px-6">
+                <div class="text-center mb-20">
+                    <p class="section-eyebrow">Operational Lenses</p>
+                    <h2 class="section-title">Finding Deeper Connections.</h2>
+                    <p class="section-subtitle">We apply diverse operational lenses to deconstruct fragmented systems, revealing the hidden interconnections and shared purposes that traditional frameworks miss.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
+                    <div class="border-t-2 border-main pt-8 has-fade-in">
+                        <i data-lucide="share-2" class="h-10 w-10 accent-text mb-4"></i>
+                        <h3 class="text-2xl font-serif font-bold mb-3 text-primary">The Systemic Lens</h3>
+                        <p class="text-secondary">Viewing society as a complex network to map flows of capital, information, and influence, identifying key leverage points for intervention.</p>
+                    </div>
+                    <div class="border-t-2 border-main pt-8 has-fade-in" style="transition-delay: 150ms;">
+                        <i data-lucide="heart-pulse" class="h-10 w-10 accent-text mb-4"></i>
+                        <h3 class="text-2xl font-serif font-bold mb-3 text-primary">The Human Lens</h3>
+                        <p class="text-secondary">Understanding the cognitive, biological, and behavioral drivers of human action to design systems that align with our innate nature.</p>
+                    </div>
+                    <div class="border-t-2 border-main pt-8 has-fade-in" style="transition-delay: 300ms;">
+                        <i data-lucide="gem" class="h-10 w-10 accent-text mb-4"></i>
+                        <h3 class="text-2xl font-serif font-bold mb-3 text-primary">The Cultural Lens</h3>
+                        <p class="text-secondary">Analyzing long-standing traditions and social norms as time-tested protocols for cooperation, resilience, and shared meaning.</p>
+                    </div>
+                    <div class="border-t-2 border-main pt-8 has-fade-in" style="transition-delay: 450ms;">
+                        <i data-lucide="coins" class="h-10 w-10 accent-text mb-4"></i>
+                        <h3 class="text-2xl font-serif font-bold mb-3 text-primary">The Economic Lens</h3>
+                        <p class="text-secondary">Re-examining financial systems through the principles of shared infrastructure and purpose to align capital with long-term societal well-being.</p>
+                    </div>
+                    <div class="border-t-2 border-main pt-8 has-fade-in" style="transition-delay: 600ms;">
+                        <i data-lucide="anchor" class="h-10 w-10 accent-text mb-4"></i>
+                        <h3 class="text-2xl font-serif font-bold mb-3 text-primary">The Philosophical Lens</h3>
+                        <p class="text-secondary">Applying first-principles thinking to embed ethics, fairness, and purpose into the core architecture of our social and economic models.</p>
+                    </div>
+                    <div class="border-t-2 border-main pt-8 has-fade-in" style="transition-delay: 750ms;">
+                        <i data-lucide="sprout" class="h-10 w-10 accent-text mb-4"></i>
+                        <h3 class="text-2xl font-serif font-bold mb-3 text-primary">The Biological Lens</h3>
+                        <p class="text-secondary">Drawing insights from natural ecosystems to design resilient, adaptive, and sustainable social structures that thrive on interconnection.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- The Approach Section -->
+        <section id="approach" class="py-24 md:py-40 bg-main">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-20">
+                    <p class="section-eyebrow">The Approach</p>
+                    <h2 class="section-title">A New Economic Architecture.</h2>
+                    <p class="section-subtitle">Traditional economics attempts to shape individual utility through artificial structures. We believe it should measure and complement inherent values. Our approach integrates psychology, culture, history, and philosophy to build systems that reflect the true nature of individuals, particularly in a collective society like India.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-10 max-w-5xl mx-auto">
+                    <div class="bg-subtle p-8 rounded-lg has-fade-in">
+                        <h3 class="font-serif text-2xl font-bold mb-4 text-primary">The Flywheel of Efficiency</h3>
+                        <p class="text-secondary">We organize firms by product, creating **clubbed supply** that generates predictable, continuous demand. In turn, **clubbed demand** ensures a more frequent, reliable, and purposeful supply. This virtuous cycle eliminates waste and makes goods and services radically cheaper for everyone.</p>
+                    </div>
+                    <div class="bg-subtle p-8 rounded-lg has-fade-in" style="transition-delay: 150ms;">
+                        <h3 class="font-serif text-2xl font-bold mb-4 text-primary">Collective Efficiency</h3>
+                        <p class="text-secondary">By linking previously isolated frameworks—like traffic management, logistics, and civic planning—we create meaningful efficiencies for all. This is about discovering the hidden connections to solve complex societal problems that no single entity can address alone.</p>
+                    </div>
+                    <div class="bg-subtle p-8 rounded-lg has-fade-in" style="transition-delay: 300ms;">
+                        <h3 class="font-serif text-2xl font-bold mb-4 text-primary">Empowering Producers</h3>
+                        <p class="text-secondary">We build public infrastructure through partnerships, re-imagining the middleman as a distributor, not a controller. This redirects capital away from gatekeepers and back towards manufacturing regions, fostering local economies and enabling a new layer of consumer personalization.</p>
+                    </div>
+                    <div class="bg-subtle p-8 rounded-lg has-fade-in" style="transition-delay: 450ms;">
+                        <h3 class="font-serif text-2xl font-bold mb-4 text-primary">An Economy of Values</h3>
+                        <p class="text-secondary">Our ultimate goal is to weave philosophy into progressive life. We are creating new economic mechanisms designed to measure and reward the things that truly matter: hard work, integrity, and the creation of community value. Profit becomes a result of progress, not its sole driver.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- The Alliance Section -->
+        <section id="join" class="py-24 md:py-40 bg-inverse text-inverse">
+            <div class="container mx-auto px-6 text-center has-fade-in">
+                <p class="section-eyebrow" style="color: #93c5fd;">The Alliance</p>
+                <h2 class="section-title">A Multi-Disciplinary Coalition.</h2>
+                <p class="section-subtitle mb-20">
+                     Synergy is an open collective, creating deep interconnections between the world's leading thinkers and institutions. Our goal is to translate diverse expertise into a common language, empowering the voice of the people to re-architect the frameworks that govern their lives.
+                </p>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-10 text-left">
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-serif font-bold text-primary border-b border-gray-700 pb-3 mb-4">Finance & Policy</h3>
+                        <p class="text-secondary text-sm">Unifying global and national financial institutions to create coherent, stable, and purposeful economic policy.</p>
+                        <p class="text-xs text-gray-500">Partners: IMF, JP Morgan Chase, Deutsche Bank, Federal Reserve Bank of New York, RBI, AEA, AFA</p>
+                    </div>
+                     <div class="space-y-4">
+                        <h3 class="text-xl font-serif font-bold text-primary border-b border-gray-700 pb-3 mb-4">Technology & Engineering</h3>
+                        <p class="text-secondary text-sm">Reverse-engineering technology to its core purpose, guided by leading computer scientists and hardware manufacturers.</p>
+                          <p class="text-xs text-gray-500">Partners: Leading CS Professors & Hardware Manufacturers</p>
+                    </div>
+                     <div class="space-y-4">
+                        <h3 class="text-xl font-serif font-bold text-primary border-b border-gray-700 pb-3 mb-4">Urban Mobility</h3>
+                        <p class="text-secondary text-sm">Solving real-world traffic challenges by linking isolated civic and corporate frameworks for the benefit of all citizens.</p>
+                         <p class="text-xs text-gray-500">Partners: BBMP, Niti Aayog, Government of India, Corporate Partners, Psychological Welfare Experts</p>
+                    </div>
+                     <div class="space-y-4">
+                        <h3 class="text-xl font-serif font-bold text-primary border-b border-gray-700 pb-3 mb-4">Food Systems</h3>
+                        <p class="text-secondary text-sm">Observing and activating the hidden links in our food supply chains to build resilient and equitable systems from farm to table.</p>
+                        <p class="text-xs text-gray-500">Partners: Agricultural Collectives, Logistical Networks, Environmental Scientists</p>
+                    </div>
+                </div>
+                <div class="mt-20">
+                     <h3 class="text-2xl font-serif font-bold mb-6 text-primary">Founding Circle & Key Supporters</h3>
+                     <div class="flex flex-wrap justify-center items-center gap-x-8 gap-y-4 text-secondary font-medium">
+                        <span>Lokendra Sethi</span>
+                        <span>Mary Finch</span>
+                        <span>Vipin Gairola</span>
+                        <span>Prateek Sethi</span>
+                        <span>Jan Bena</span>
+                        <span>Adlai Fisher</span>
+                        <span>Siddhartha Rentala</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Our Genesis Section -->
+        <section id="founder" class="py-24 md:py-40 bg-main">
+            <div class="container mx-auto px-6 text-center has-fade-in">
+                <p class="section-eyebrow">Our Genesis</p>
+                <h2 class="section-title">The Philosophy of Synergy.</h2>
+                <p class="section-subtitle mb-16">
+                    Our central observation is that brilliant people often fight against each other, armed with different academic and cultural frameworks, while unknowingly sharing the same unified goal. Synergy is the practice of bridging these divides.
+                </p>
+                <div class="grid md:grid-cols-2 gap-12 text-left justify-center max-w-4xl mx-auto">
+                     <div class="has-fade-in" style="transition-delay: 200ms;">
+                        <i data-lucide="book-open" class="h-10 w-10 accent-text mb-4"></i>
+                        <h3 class="text-2xl font-serif font-bold mb-3 text-primary">Intellectual Synthesis</h3>
+                        <p class="text-secondary">Studying Economics, Philosophy, and Computer Science provides the tools to deconstruct a problem from first principles and see the common objective hidden beneath conflicting expert opinions.</p>
+                    </div>
+                    <div class="has-fade-in" style="transition-delay: 400ms;">
+                        <i data-lucide="network" class="h-10 w-10 accent-text mb-4"></i>
+                        <h3 class="text-2xl font-serif font-bold mb-3 text-primary">Action through Network</h3>
+                        <p class="text-secondary">True synthesis happens when ideas are tested in the real world. Engaging with diplomats, founders, and investors is how we translate theory into tangible, collaborative ventures.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-subtle py-16">
+        <div class="container mx-auto px-6 text-center text-secondary">
+            <a href="#home" class="text-2xl font-serif font-bold text-primary mb-4 inline-block">
+                Synergy<span class="accent-text">.</span>
+            </a>
+            <p class="text-sm">Architecting the Foundational Layers of a Purposeful Society.</p>
+            <p class="text-xs mt-8">&copy; 2025 Synergy Initiative. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- THEME SWITCHER ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('theme-icon-sun');
+        const moonIcon = document.getElementById('theme-icon-moon');
+        const heroOverlay = document.getElementById('hero-overlay');
+        const htmlEl = document.documentElement;
+
+        // Function to apply theme
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                htmlEl.dataset.theme = 'dark';
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+                heroOverlay.classList.remove('bg-white/50');
+                heroOverlay.classList.add('bg-black/50');
+            } else {
+                htmlEl.dataset.theme = 'light';
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+                heroOverlay.classList.remove('bg-black/50');
+                heroOverlay.classList.add('bg-white/50');
+            }
+        }
+
+        // Event listener for the toggle button
+        themeToggle.addEventListener('click', () => {
+            const newTheme = htmlEl.dataset.theme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            applyTheme(newTheme);
+        });
+
+        // Initialize theme on page load
+        const storedTheme = localStorage.getItem('theme');
+        const preferredTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        applyTheme(storedTheme || preferredTheme);
+
+
+        // --- LUCIDE ICONS ---
+        lucide.createIcons();
+
+        // --- MOBILE MENU ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        const mobileNavLinks = document.querySelectorAll('#mobile-menu a, #header nav a');
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if(e.currentTarget.id !== 'theme-toggle') {
+                     if (!mobileMenu.classList.contains('hidden')) {
+                         mobileMenu.classList.add('hidden');
+                    }
+                }
+            });
+        });
+
+        // --- HEADER STYLE ON SCROLL ---
+        const header = document.getElementById('header');
+        const navInner = document.getElementById('nav-inner');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                header.classList.add('bg-main/95', 'backdrop-blur-sm', 'shadow-sm');
+                navInner.classList.remove('py-5', 'border-transparent');
+                navInner.classList.add('py-4', 'border-main');
+            } else {
+                header.classList.remove('bg-main/95', 'backdrop-blur-sm', 'shadow-sm');
+                navInner.classList.add('py-5', 'border-transparent');
+                navInner.classList.remove('py-4', 'border-main');
+            }
+        });
+        
+        // --- FADE-IN ON SCROLL ANIMATION ---
+        const fadeInElements = document.querySelectorAll('.has-fade-in');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        fadeInElements.forEach(el => observer.observe(el));
+
+        // --- SMOOTH SCROLL FOR ANCHOR LINKS ---
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        
+        // --- HERO TITLE ANIMATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+             const title = document.getElementById('hero-title');
+            const osWrapper = document.querySelector('.os-wrapper');
+            const subtitle = document.getElementById('hero-subtitle');
+            const heroCta = document.getElementById('hero-cta');
+
+            if(osWrapper && title && subtitle && heroCta) {
+                 title.style.opacity = 1;
+                setTimeout(() => {
+                    const text = osWrapper.innerText;
+                    if (text === 'Operating System') {
+                        osWrapper.innerHTML = `
+                            <span class="os-char">O</span><span class="os-middle">p</span><span class="os-middle">e</span><span class="os-middle">r</span><span class="os-middle">a</span><span class="os-middle">t</span><span class="os-middle">i</span><span class="os-middle">n</span><span class="os-middle">g</span><span class="os-middle">&nbsp;</span><span class="os-char">S</span><span class="os-middle">y</span><span class="os-middle">s</span><span class="os-middle">t</span><span class="os-middle">e</span><span class="os-middle">m</span>
+                        `;
+                        setTimeout(() => {
+                           osWrapper.classList.add('animate');
+                           const middleChars = osWrapper.querySelectorAll('.os-middle');
+                           let maxDelay = 0;
+                           middleChars.forEach((char, index) => {
+                               const delay = index * 40;
+                               char.style.transitionDelay = `${delay}ms`;
+                               if(delay > maxDelay) maxDelay = delay;
+                           });
+
+                           setTimeout(() => {
+                                subtitle.style.opacity = 1;
+                                heroCta.style.opacity = 1;
+                           }, maxDelay + 200);
+
+                        }, 500);
+                    }
+                }, 2000); // Shortened delay to 2 seconds
+            }
+        });
+
+        // --- HERO CANVAS ANIMATION ---
+        const heroCanvas = document.getElementById('hero-canvas');
+        if (heroCanvas) {
+            const ctx = heroCanvas.getContext('2d');
+            let nodes = [], connections = [], mouse = { x: null, y: null, radius: 150 };
+            let animationState = {
+                bulbLit: false, startTime: Date.now(),
+                bulbGlowDuration: 1000, connectionDuration: 2000,
+            };
+
+            const starWords = [
+                "Local Delis", "Beach Days", "Synergy", "Value Systems", 
+                "Society", "Ancestry", "Fairs", "Skydiving",
+                "Interconnected Governance", "Enabled Environments", "Shaping Private Equity",
+                "Interconnected Taxes", "Decentralized Content", "Civic Labs", "Shared Risk",
+                "Purposeful Capital", "Shared Financial Models", "Public Internet",
+                "Community Appeal Centers", "Decentralized Environments",
+                "Algorithmic Fairness", "Community Equity", "Circular Economies", "Social Fabric"
+            ];
+            let activeStars = [];
+            let lastStarTime = 0;
+
+            const themeColors = {
+                light: { node: '0, 87, 255', line: '100, 100, 100'},
+                dark: { node: '88, 166, 255', line: '100, 100, 100'}
+            };
+
+            function resizeHeroCanvas() {
+                heroCanvas.width = window.innerWidth;
+                heroCanvas.height = window.innerHeight;
+            }
+            resizeHeroCanvas();
+            window.addEventListener('resize', () => { resizeHeroCanvas(); initHero(); });
+            window.addEventListener('mousemove', (event) => { mouse.x = event.x; mouse.y = event.y; });
+            window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
+            
+            class Star {
+                constructor(width, height) {
+                    this.text = starWords[Math.floor(Math.random() * starWords.length)];
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                    this.opacity = 0;
+                    this.maxLife = 4000 + Math.random() * 3000; // 4-7 seconds
+                    this.life = this.maxLife;
+                    this.state = 'fading-in';
+                }
+
+                update() {
+                    this.life -= 16; // Approximation for delta time
+                    if (this.state === 'fading-in') {
+                        this.opacity += 0.02;
+                        if (this.opacity >= 0.7) {
+                            this.opacity = 0.7;
+                            this.state = 'visible';
+                        }
+                    } else if (this.life < 1000) { // Start fading out in the last second
+                        this.state = 'fading-out';
+                    }
+
+                    if (this.state === 'fading-out') {
+                        this.opacity -= 0.01;
+                    }
+                }
+
+                draw(ctx, theme) {
+                    const textColor = theme === 'dark' ? '139, 148, 158' : '107, 114, 128'; // text-secondary
+                    ctx.fillStyle = `rgba(${textColor}, ${this.opacity})`;
+                    ctx.font = '14px Poppins';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(this.text, this.x, this.y);
+                }
+            }
+
+
+            class HeroNode {
+                 constructor(x, y, isBulb = false) {
+                    this.x = x; this.y = y; this.size = isBulb ? 4 : 2; this.baseBrightness = isBulb ? 1 : 0.1;
+                    this.brightness = this.baseBrightness; this.isBulb = isBulb; this.connected = isBulb;
+                }
+                draw() {
+                    let currentBrightness = this.brightness;
+                    if (mouse.x !== null) {
+                        const dist = Math.hypot(this.x - mouse.x, this.y - mouse.y);
+                        if (dist < mouse.radius) { currentBrightness += (1 - dist / mouse.radius) * 0.7; }
+                    }
+                    currentBrightness = Math.min(1, currentBrightness);
+                    const currentTheme = htmlEl.dataset.theme || 'light';
+                    ctx.fillStyle = `rgba(${themeColors[currentTheme].node}, ${currentBrightness})`;
+                    ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+                }
+                lightUp() {
+                    if (!this.connected) {
+                        this.connected = true; let start = null;
+                        const animateUp = (timestamp) => {
+                            if (!start) start = timestamp; const progress = timestamp - start;
+                            this.brightness = this.baseBrightness + (1 - this.baseBrightness) * Math.min(1, progress / 500);
+                            if(progress < 500) requestAnimationFrame(animateUp);
+                        };
+                        requestAnimationFrame(animateUp);
+                    }
+                }
+            }
+
+            function initHero() {
+                nodes = []; connections = []; activeStars = [];
+                animationState.startTime = Date.now(); animationState.bulbLit = false;
+                let numberOfNodes = (heroCanvas.width * heroCanvas.height) / 15000;
+                nodes.push(new HeroNode(heroCanvas.width / 2, heroCanvas.height / 2, true)); 
+                for (let i = 0; i < numberOfNodes; i++) { nodes.push(new HeroNode(Math.random() * heroCanvas.width, Math.random() * heroCanvas.height)); }
+                for (let i = 0; i < nodes.length; i++) {
+                    let neighbors = nodes.map((node, index) => ({ dist: Math.hypot(nodes[i].x - node.x, nodes[i].y - node.y), index: index, })).sort((a, b) => a.dist - b.dist).slice(1, 3);
+                    for (let neighbor of neighbors) { if (!connections.some(c => (c.from === i && c.to === neighbor.index) || (c.from === neighbor.index && c.to === i))) { connections.push({ from: i, to: neighbor.index, progress: 0 }); } }
+                }
+            }
+
+            function animateHero() {
+                ctx.clearRect(0, 0, heroCanvas.width, heroCanvas.height);
+                const now = Date.now();
+                const elapsed = now - animationState.startTime;
+
+                // Handle Twinkling Stars
+                if (now - lastStarTime > 1000 && activeStars.length < 10) { // Add a star every second, max 10 on screen
+                    activeStars.push(new Star(heroCanvas.width, heroCanvas.height));
+                    lastStarTime = now;
+                }
+                
+                activeStars = activeStars.filter(star => {
+                    star.update();
+                    return star.opacity > 0;
+                });
+                activeStars.forEach(star => {
+                    star.draw(ctx, htmlEl.dataset.theme || 'light');
+                });
+
+
+                // Handle Network
+                if (elapsed > 500 && !animationState.bulbLit) {
+                    const bulb = nodes[0]; const bulbProgress = Math.min(1, (elapsed - 500) / animationState.bulbGlowDuration);
+                    bulb.brightness = 0.1 + bulbProgress * 0.9; bulb.size = 2 + bulbProgress * 3;
+                    if (bulbProgress === 1) { animationState.bulbLit = true; }
+                }
+                if(animationState.bulbLit) {
+                    const connectionProgress = Math.min(1, (elapsed - 500 - animationState.bulbGlowDuration) / animationState.connectionDuration);
+                    connections.forEach(conn => { conn.progress = connectionProgress; if(nodes[conn.from].connected) { nodes[conn.to].lightUp(); } if(nodes[conn.to].connected) { nodes[conn.from].lightUp(); } });
+                }
+                const currentTheme = htmlEl.dataset.theme || 'light';
+                connections.forEach(conn => {
+                    if (conn.progress > 0) {
+                        const fromNode = nodes[conn.from]; const toNode = nodes[conn.to]; const targetX = fromNode.x + (toNode.x - fromNode.x) * conn.progress; const targetY = fromNode.y + (toNode.y - fromNode.y) * conn.progress;
+                        let opacity = (fromNode.brightness + toNode.brightness) / 2 * 0.5;
+                         if (mouse.x !== null) { const distFrom = Math.hypot(fromNode.x - mouse.x, fromNode.y - mouse.y); const distTo = Math.hypot(toNode.x - mouse.x, toNode.y - mouse.y); if (distFrom < mouse.radius || distTo < mouse.radius) { opacity += 0.3; } }
+                        ctx.strokeStyle = `rgba(${themeColors[currentTheme].line}, ${opacity})`; ctx.lineWidth = 0.5;
+                        ctx.beginPath(); ctx.moveTo(fromNode.x, fromNode.y); ctx.lineTo(targetX, targetY); ctx.stroke();
+                    }
+                });
+                nodes.forEach(node => node.draw());
+                requestAnimationFrame(animateHero);
+            }
+
+            initHero();
+            animateHero();
+        }
+
+        // --- ABOUT CANVAS ANIMATION ---
+        const aboutCanvas = document.getElementById('about-canvas');
+        if (aboutCanvas) {
+            const aboutCtx = aboutCanvas.getContext('2d');
+            let lines = [];
+            const lineCount = 20;
+
+            function resizeAboutCanvas() {
+                const container = aboutCanvas.parentElement;
+                aboutCanvas.width = container.clientWidth;
+                aboutCanvas.height = container.clientHeight;
+            }
+            
+            class Line {
+                constructor(width, height) {
+                    this.x1 = Math.random() * width; this.y1 = Math.random() * height;
+                    this.x2 = this.x1 + (Math.random() - 0.5) * 80; this.y2 = this.y1 + (Math.random() - 0.5) * 80;
+                    this.vx = (Math.random() - 0.5) * 0.2; this.vy = (Math.random() - 0.5) * 0.2;
+                    this.targetAngle = Math.floor(Math.random() * 4) * (Math.PI / 2); this.currentAngle = Math.random() * Math.PI * 2;
+                }
+                update(width, height, t) {
+                    this.x1 += this.vx; this.y1 += this.vy; this.x2 += this.vx; this.y2 += this.vy;
+                    if (this.x1 < 0 || this.x1 > width) this.vx *= -1;
+                    if (this.y1 < 0 || this.y1 > height) this.vy *= -1;
+                    const lerpFactor = Math.min(1, t / 5000);
+                    let angleDiff = this.targetAngle - this.currentAngle;
+                    while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+                    while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+                    this.currentAngle += angleDiff * lerpFactor * 0.1;
+                    const length = 40;
+                    this.x2 = this.x1 + Math.cos(this.currentAngle) * length;
+                    this.y2 = this.y1 + Math.sin(this.currentAngle) * length;
+                }
+                draw(ctx) {
+                    ctx.beginPath();
+                    ctx.moveTo(this.x1, this.y1);
+                    ctx.lineTo(this.x2, this.y2);
+                    ctx.stroke();
+                }
+            }
+            
+            function initAbout() {
+                resizeAboutCanvas();
+                lines = [];
+                for (let i = 0; i < lineCount; i++) {
+                    lines.push(new Line(aboutCanvas.width, aboutCanvas.height));
+                }
+            }
+            
+            let startTime = null;
+            function animateAbout(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+                const currentTheme = htmlEl.dataset.theme || 'light';
+                aboutCtx.clearRect(0, 0, aboutCanvas.width, aboutCanvas.height);
+                aboutCtx.strokeStyle = currentTheme === 'dark' ? 'rgba(88, 166, 255, 0.5)' : 'rgba(0, 87, 255, 0.5)';
+                aboutCtx.lineWidth = 1.5;
+                lines.forEach(line => {
+                    line.update(aboutCanvas.width, aboutCanvas.height, elapsed);
+                    line.draw(aboutCtx);
+                });
+                requestAnimationFrame(animateAbout);
+            }
+
+            const aboutObserver = new IntersectionObserver((entries) => {
+                if(entries[0].isIntersecting) {
+                    initAbout();
+                    requestAnimationFrame(animateAbout);
+                    aboutObserver.unobserve(aboutCanvas);
+                }
+            }, { threshold: 0.1 });
+            aboutObserver.observe(aboutCanvas);
+            window.addEventListener('resize', initAbout);
+        }
+    </script>
+</body>
+
+</html>
+
