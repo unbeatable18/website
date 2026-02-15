@@ -222,6 +222,9 @@
         }
 
         .hero-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             animation: slideInFromLeft 1s ease-out forwards;
         }
 
@@ -230,7 +233,9 @@
             max-width: 400px;
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
-            transform: rotate(270deg); /* Rotated image */
+            transform: none;
+            aspect-ratio: 3/4;
+            object-fit: cover;
         }
 
         .hero-content {
@@ -264,8 +269,8 @@
         }
 
         @keyframes slideInFromLeft {
-            0% { transform: translateX(-100%) rotate(90deg); opacity: 0; }
-            100% { transform: translateX(0) rotate(90deg); opacity: 1; }
+            0% { transform: translateX(-100%); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
         }
 
         @keyframes slideInFromRight {
