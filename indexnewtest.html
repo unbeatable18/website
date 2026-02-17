@@ -242,6 +242,13 @@
              background-image: linear-gradient(rgba(250, 235, 215, 0.85), rgba(250, 235, 215, 0.75)), url('https://images.unsplash.com/photo-1598991832383-6b7117cbe798?q=80&w=2070&auto=format&fit=crop');
         }
 
+        .hero-image-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
         .hero-image {
             display: flex;
             justify-content: center;
@@ -263,6 +270,45 @@
             aspect-ratio: 3/4;
             object-fit: cover;
             animation: float 6s ease-in-out infinite;
+        }
+
+        /* --- Institutional Badge --- */
+        .institutional-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border-radius: 50px;
+            border: 1px solid rgba(128, 128, 128, 0.1);
+            animation: slideInFromLeft 1.2s ease-out forwards;
+            transition: all 0.3s ease;
+        }
+
+        .institutional-badge img {
+            height: 28px;
+            width: auto;
+            filter: grayscale(1);
+            opacity: 0.7;
+            transition: all 0.4s ease;
+        }
+
+        .institutional-badge:hover {
+            background: rgba(255, 255, 255, 0.5);
+            border-color: var(--primary-color);
+        }
+
+        .institutional-badge:hover img {
+            filter: grayscale(0);
+            opacity: 1;
+        }
+
+        .institutional-badge span {
+            font-size: 0.85rem;
+            font-family: var(--heading-font);
+            font-weight: 500;
+            color: var(--light-text-color);
         }
 
         .hero-content {
@@ -361,10 +407,33 @@
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
             transition: transform 0.3s ease;
+            position: relative;
         }
         
         .timeline-content:hover {
             transform: translateY(-5px);
+        }
+
+        .company-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 0.2rem;
+        }
+
+        .timeline-left .company-header {
+            flex-direction: row-reverse;
+        }
+
+        .company-logo {
+            height: 20px;
+            width: auto;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .timeline-content:hover .company-logo {
+            opacity: 1;
         }
 
         .timeline-content .date {
@@ -380,7 +449,6 @@
             font-weight: 700;
             font-size: 1.15rem;
             color: var(--heading-color);
-            margin-bottom: 0.2rem;
         }
 
         .timeline-content h3 {
@@ -524,6 +592,7 @@
             .timeline-right { left: 0; }
             .synergy-grid { grid-template-columns: 1fr; }
             .cursor-dot, .cursor-outline { display: none; }
+            .company-header { flex-direction: row !important; }
             body { cursor: auto; }
         }
     </style>
@@ -547,11 +616,18 @@
     </nav>
 
     <header id="hero">
-        <div class="hero-image">
-            <img src="IMG_2622.jpeg" alt="Aditya Sethi Profile">
+        <div class="hero-image-container">
+            <div class="hero-image">
+                <img src="IMG_2622.jpeg" alt="Aditya Sethi Profile">
+            </div>
+            <div class="institutional-badge">
+                <img src="UBC logo.png" alt="UBC Logo">
+                <span>International Economics</span>
+            </div>
         </div>
         <div class="hero-content">
             <h1>Aditya Sethi</h1>
+            <p>Bridging economics, technology, and strategy to build systems that work for everyone.</p>
             <div class="social-links">
                 <a href="https://linkedin.com/in/sethiaditya3" target="_blank"><i class="fab fa-linkedin"></i></a>
                 <a href="#"><i class="fab fa-github"></i></a>
@@ -568,7 +644,10 @@
                     <div class="timeline-item timeline-right">
                         <div class="timeline-content">
                             <span class="date">APR 2025 - PRESENT</span>
-                            <div class="company">Deutsche Bank</div>
+                            <div class="company-header">
+                                <img src="DB Logo.png" alt="Deutsche Bank Logo" class="company-logo">
+                                <div class="company">Deutsche Bank</div>
+                            </div>
                             <h3>Investment Services</h3>
                             <p class="description">Developing an individual initiative to automate core processes within the division to drive operational efficiency.</p>
                         </div>
@@ -577,7 +656,9 @@
                     <div class="timeline-item timeline-left">
                         <div class="timeline-content">
                             <span class="date">FEB 2024 - APR 2024</span>
-                            <div class="company">AECOM Canada</div>
+                            <div class="company-header">
+                                <div class="company">AECOM Canada</div>
+                            </div>
                             <h3>Enterprise Capabilities</h3>
                             <p class="description">Reported to the Global Head of Operations. Strategized talent offshoring frameworks for North American (NAM) & Latin American (LAM) markets.</p>
                         </div>
@@ -586,7 +667,9 @@
                     <div class="timeline-item timeline-right">
                         <div class="timeline-content">
                             <span class="date">JUN 2023 - JUL 2023</span>
-                            <div class="company">NITI Aayog, Government of India</div>
+                            <div class="company-header">
+                                <div class="company">NITI Aayog, Government of India</div>
+                            </div>
                             <h3>Economics, Finance & G20 India</h3>
                             <p class="description">Immersed in high-level economic policy and trade deal development during India’s G20 Presidency, engaging with international delegations.</p>
                         </div>
@@ -683,7 +766,7 @@
             }, { duration: 500, fill: "forwards" });
         });
 
-        document.querySelectorAll('a, button, .project-card, .logo img, .synergy-card').forEach(el => {
+        document.querySelectorAll('a, button, .project-card, .logo img, .synergy-card, .institutional-badge').forEach(el => {
             el.addEventListener('mouseenter', () => document.body.classList.add('cursor-active'));
             el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-active'));
         });
