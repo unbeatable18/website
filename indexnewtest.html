@@ -7,40 +7,44 @@
     <link rel="icon" type="image/x-icon" href="Rounded B&W.ico">
     <style>
         /* --- Universal Styles & Google Fonts --- */
-        @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap');
 
         :root {
-            --primary-color: #5a6268; /* New subtle grey color */
+            --primary-color: #5a6268;
             --secondary-color: #f8f9fa;
             --background-color: #ffffff;
-            --text-color: #333;
+            --text-color: #444;
             --heading-color: #111;
-            --light-text-color: #555;
-            --shadow-color: rgba(0,0,0,0.07);
+            --light-text-color: #666;
+            --card-bg: #ffffff;
+            --shadow-color: rgba(0,0,0,0.08);
             --heading-font: 'Google Sans', 'Helvetica Neue', Arial, sans-serif;
             --body-font: 'Roboto', 'Georgia', serif;
-            --border-radius: 12px;
-            --shadow: 0 4px 20px var(--shadow-color);
+            --border-radius: 16px;
+            --shadow: 0 10px 30px -5px var(--shadow-color);
+            --navbar-height: 70px;
         }
 
         body.dark-mode {
             --primary-color: #adb5bd;
-            --secondary-color: #1a1a1a;
+            --secondary-color: #1f1f1f;
             --background-color: #121212;
             --text-color: #e0e0e0;
             --heading-color: #ffffff;
-            --light-text-color: #adb5bd;
-            --shadow-color: rgba(255,255,255,0.05);
+            --light-text-color: #aaa;
+            --card-bg: #1e1e1e;
+            --shadow-color: rgba(0,0,0,0.3);
         }
 
         body.afternoon-mode {
-            --primary-color: #D35400; /* Warm orange */
-            --secondary-color: #FDF5E6; /* Creamy */
-            --background-color: #FAEBD7; /* Antique white */
+            --primary-color: #D35400;
+            --secondary-color: #FDF5E6;
+            --background-color: #FAEBD7;
             --text-color: #4A4A4A;
             --heading-color: #2C3E50;
             --light-text-color: #5D6D7E;
-            --shadow-color: rgba(0,0,0,0.08);
+            --card-bg: #fffbf2;
+            --shadow-color: rgba(44, 62, 80, 0.1);
         }
 
         * {
@@ -51,6 +55,7 @@
 
         html {
             scroll-behavior: smooth;
+            scroll-padding-top: var(--navbar-height);
         }
 
         body {
@@ -59,11 +64,10 @@
             background-color: var(--background-color);
             color: var(--text-color);
             overflow-x: hidden;
-            cursor: none; /* Hide the default cursor */
-            transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease-in-out; /* Added opacity transition */
+            cursor: none; 
+            transition: background-color 0.4s ease, color 0.4s ease;
         }
         
-        /* New styles for page transition */
         @keyframes fadeOut {
             from { opacity: 1; }
             to { opacity: 0; }
@@ -73,33 +77,37 @@
             animation: fadeOut 0.3s ease-in-out forwards;
         }
 
-
-        /* --- Custom Cursor --- */
-        .cursor {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background-color: var(--primary-color);
-            position: fixed;
-            z-index: 9999;
-            pointer-events: none; /* Allows clicking through the cursor */
-            transform: translate(-50%, -50%);
-            transition: transform 0.1s ease-out, background-color 0.3s ease;
-        }
-
-        .sparkle {
-            position: fixed;
+        /* --- Refined Custom Cursor --- */
+        .cursor-dot {
             width: 8px;
             height: 8px;
             background-color: var(--primary-color);
+            position: fixed;
+            z-index: 10000;
             border-radius: 50%;
             pointer-events: none;
-            z-index: 9998;
             transform: translate(-50%, -50%);
-            opacity: 0;
-            transition: opacity 0.5s ease-out, background-color 0.3s ease;
+            transition: transform 0.1s ease;
         }
 
+        .cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--primary-color);
+            position: fixed;
+            z-index: 9999;
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            transition: transform 0.2s ease-out, width 0.3s ease, height 0.3s ease, background-color 0.3s ease;
+        }
+
+        .cursor-active .cursor-outline {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(128, 128, 128, 0.1);
+            border-color: var(--primary-color);
+        }
 
         .container {
             max-width: 1100px;
@@ -110,32 +118,29 @@
         h1, h2, h3 {
             font-family: var(--heading-font);
             font-weight: 700;
-            line-height: 1.3;
+            line-height: 1.25;
             margin-bottom: 1rem;
             color: var(--heading-color);
         }
 
-        h1 { font-size: 3.5rem; }
-        h2 { font-size: 2.5rem; color: var(--primary-color); text-align: center; margin-bottom: 3rem; }
-        h3 { font-size: 1.5rem; color: var(--primary-color); }
+        h1 { font-size: 3.5rem; letter-spacing: -1px; }
+        h2 { font-size: 2.5rem; color: var(--primary-color); text-align: center; margin-bottom: 3.5rem; letter-spacing: -0.5px; }
+        h3 { font-size: 1.5rem; color: var(--heading-color); }
 
         p {
             margin-bottom: 1rem;
             color: var(--light-text-color);
+            font-weight: 400;
         }
 
-        a {
-            color: var(--primary-color);
-            text-decoration: none;
-        }
-
-        a, button, #theme-toggle, .logo img {
-            cursor: none; /* Ensure custom cursor is used */
+        a, button, #theme-toggle, .logo img, .project-card, .synergy-card {
+            cursor: none; 
+            text-decoration: none !important;
         }
 
         section {
-            padding: 5rem 0;
-            transition: background-color 0.3s ease;
+            padding: 6rem 0;
+            transition: background-color 0.4s ease;
         }
 
         .section-light { background: var(--secondary-color); }
@@ -146,24 +151,26 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.5rem 2rem; /* Reduced top/bottom padding slightly to accommodate logo height */
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 0.75rem 2rem;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 1px 15px rgba(0,0,0,0.05);
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.4s ease, padding 0.3s ease;
+            height: var(--navbar-height);
         }
 
         body.dark-mode #navbar {
-             background: rgba(26, 26, 26, 0.85);
-             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+             background: rgba(18, 18, 18, 0.8);
+             box-shadow: 0 1px 15px rgba(0,0,0,0.3);
         }
 
         body.afternoon-mode #navbar {
-            background: rgba(250, 235, 215, 0.85); /* Antique white translucent */
+            background: rgba(250, 235, 215, 0.85);
         }
 
         #navbar .logo {
@@ -172,13 +179,13 @@
         }
 
         #navbar .logo img {
-            height: 45px; /* Adjust height to fit navbar */
+            height: 40px;
             width: auto;
             transition: transform 0.3s ease;
         }
 
         #navbar .logo img:hover {
-            transform: scale(1.05);
+            transform: scale(1.1);
         }
 
         #navbar ul {
@@ -188,46 +195,51 @@
         }
 
         #navbar ul li a {
-            padding: 0.75rem 1rem;
-            margin: 0 0.25rem;
+            padding: 0.5rem 1rem;
+            margin: 0 0.1rem;
             font-family: var(--heading-font);
             font-weight: 500;
+            font-size: 0.95rem;
             color: var(--text-color);
-            transition: color 0.3s;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-decoration: none;
         }
 
-        #navbar ul li a:hover {
+        #navbar ul li a:hover,
+        #navbar ul li a.active {
             color: var(--primary-color);
+            background: rgba(128, 128, 128, 0.05);
+            text-decoration: none;
         }
 
         #theme-toggle {
             background: none;
             border: none;
             color: var(--text-color);
-            font-size: 1.5rem;
-            margin-left: 1rem;
+            font-size: 1.25rem;
+            margin-left: 1.5rem;
         }
 
         /* --- Hero Section --- */
         #hero {
-            height: 100vh;
+            min-height: 100vh;
             display: grid;
             grid-template-columns: 1fr 1fr;
             align-items: center;
-            background-image: linear-gradient(rgba(200, 210, 200, 0.2), rgba(200, 210, 200, 0.2)), url('https://images.unsplash.com/photo-1598991832383-6b7117cbe798?q=80&w=2070&auto=format&fit=crop');
+            background-image: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.8)), url('https://images.unsplash.com/photo-1598991832383-6b7117cbe798?q=80&w=2070&auto=format&fit=crop');
             background-size: cover;
-            background-position: center center;
-            color: var(--heading-color);
+            background-position: center;
             padding: 0 4rem;
-            transition: background-image 0.3s ease;
+            padding-top: var(--navbar-height);
         }
 
         body.dark-mode #hero {
-             background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1598991832383-6b7117cbe798?q=80&w=2070&auto=format&fit=crop');
+             background-image: linear-gradient(rgba(18, 18, 18, 0.9), rgba(18, 18, 18, 0.8)), url('https://images.unsplash.com/photo-1598991832383-6b7117cbe798?q=80&w=2070&auto=format&fit=crop');
         }
 
         body.afternoon-mode #hero {
-             background-image: linear-gradient(rgba(211, 84, 0, 0.1), rgba(211, 84, 0, 0.1)), url('https://images.unsplash.com/photo-1598991832383-6b7117cbe798?q=80&w=2070&auto=format&fit=crop');
+             background-image: linear-gradient(rgba(250, 235, 215, 0.85), rgba(250, 235, 215, 0.75)), url('https://images.unsplash.com/photo-1598991832383-6b7117cbe798?q=80&w=2070&auto=format&fit=crop');
         }
 
         .hero-image {
@@ -237,77 +249,90 @@
             animation: slideInFromLeft 1s ease-out forwards;
         }
 
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
         .hero-image img {
             width: 100%;
-            max-width: 400px;
+            max-width: 380px;
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
-            transform: none;
             aspect-ratio: 3/4;
             object-fit: cover;
+            animation: float 6s ease-in-out infinite;
         }
 
         .hero-content {
             text-align: left;
             animation: slideInFromRight 1s ease-out forwards;
+            padding-left: 2rem;
         }
 
         #hero h1 {
-            font-size: 4rem;
-            margin-bottom: 0.5rem;
+            font-size: 4.5rem;
+            margin-bottom: 0.2rem;
+            background: linear-gradient(45deg, var(--heading-color), var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         #hero p {
-            font-size: 1.25rem;
+            font-size: 1.35rem;
             font-family: var(--body-font);
-            font-weight: 400;
+            font-weight: 300;
             max-width: 600px;
-            line-height: 1.8;
+            line-height: 1.6;
+            margin-bottom: 2rem;
         }
 
         #hero .social-links a {
-            color: var(--heading-color);
-            margin-right: 2rem;
+            color: var(--text-color);
+            margin-right: 1.5rem;
             font-size: 1.8rem;
             transition: color 0.3s, transform 0.3s;
+            display: inline-block;
+            text-decoration: none;
         }
 
         #hero .social-links a:hover {
             color: var(--primary-color);
-            transform: scale(1.2);
+            transform: translateY(-5px);
         }
 
         @keyframes slideInFromLeft {
-            0% { transform: translateX(-100%); opacity: 0; }
+            0% { transform: translateX(-50px); opacity: 0; }
             100% { transform: translateX(0); opacity: 1; }
         }
 
         @keyframes slideInFromRight {
-            0% { transform: translateX(100%); opacity: 0; }
+            0% { transform: translateX(50px); opacity: 0; }
             100% { transform: translateX(0); opacity: 1; }
         }
 
         /* --- Experience Section Timeline --- */
         #experience .timeline {
             position: relative;
-            max-width: 1200px;
+            max-width: 900px;
             margin: 0 auto;
         }
 
         #experience .timeline::after {
             content: '';
             position: absolute;
-            width: 6px;
+            width: 2px;
             background-color: var(--primary-color);
+            opacity: 0.2;
             top: 0;
             bottom: 0;
             left: 50%;
-            margin-left: -3px;
-            border-radius: 3px;
+            margin-left: -1px;
         }
 
         .timeline-item {
-            padding: 10px 40px;
+            padding: 30px 60px;
             position: relative;
             background-color: inherit;
             width: 50%;
@@ -316,69 +341,61 @@
         .timeline-item::after {
             content: '';
             position: absolute;
-            width: 25px;
-            height: 25px;
-            right: -17px;
-            background-color: var(--background-color);
-            border: 4px solid var(--primary-color);
-            top: 15px;
+            width: 12px;
+            height: 12px;
+            right: -6px;
+            background-color: var(--primary-color);
+            top: 36px;
             border-radius: 50%;
             z-index: 1;
+            box-shadow: 0 0 0 8px var(--background-color);
         }
 
-        .timeline-left {
-            left: 0;
-        }
-
-        .timeline-right {
-            left: 50%;
-        }
-
-        .timeline-right::after {
-            left: -16px;
-        }
+        .timeline-left { left: 0; text-align: right; }
+        .timeline-right { left: 50%; }
+        .timeline-right::after { left: -6px; }
 
         .timeline-content {
-            padding: 20px 30px;
-            background-color: var(--background-color);
-            position: relative;
+            padding: 2rem;
+            background-color: var(--card-bg);
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
         }
         
+        .timeline-content:hover {
+            transform: translateY(-5px);
+        }
+
         .timeline-content .date {
-            display: block;
-            font-size: 0.9rem;
-            font-style: italic;
-            color: var(--light-text-color);
-            margin-bottom: 0.75rem;
+            display: inline-block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
         }
 
         .timeline-content .company {
             font-weight: 700;
-            font-family: var(--heading-font);
+            font-size: 1.15rem;
             color: var(--heading-color);
-            font-size: 1.2rem;
-            font-style: normal;
+            margin-bottom: 0.2rem;
         }
 
         .timeline-content h3 {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             margin-top: 0;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
             font-weight: 500;
-        }
-
-        .timeline-content p.description {
-            margin-bottom: 0;
-            font-size: 1rem;
+            color: var(--primary-color);
         }
 
         /* --- Synergy Section --- */
         #synergy .synergy-intro {
             text-align: center;
-            max-width: 700px;
-            margin: 0 auto 3rem auto;
+            max-width: 750px;
+            margin: 0 auto 4rem auto;
         }
 
         .synergy-grid {
@@ -388,120 +405,109 @@
         }
 
         .synergy-card {
-            background-color: var(--background-color);
-            padding: 2.5rem 2rem;
+            background-color: var(--card-bg);
+            padding: 2.5rem 1.5rem;
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
             text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .synergy-card:hover {
+            transform: translateY(-8px);
         }
 
         .synergy-card .icon {
             font-size: 2.5rem;
             color: var(--primary-color);
-            margin-bottom: 1rem;
-        }
-
-        .synergy-card h3 {
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1.2rem;
         }
 
         /* --- Projects Section --- */
         .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
         }
 
         .project-card {
-            background: var(--background-color);
+            background: var(--card-bg);
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            height: 100%;
         }
 
         .project-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            transform: translateY(-8px);
         }
 
         .project-card img {
             width: 100%;
-            height: 200px;
+            aspect-ratio: 16/9;
             object-fit: cover;
-            border-radius: var(--border-radius) var(--border-radius) 0 0;
         }
 
         .project-card-content {
-            padding: 1.5rem;
+            padding: 2rem;
             flex-grow: 1;
-        }
-
-        .project-card-content h3 {
-             margin-bottom: 0.5rem;
+            display: flex;
+            flex-direction: column;
         }
 
         .project-link {
             display: inline-block;
-            margin-top: 1rem;
-            font-weight: bold;
-            transition: background-size 0.3s;
-            padding: 0.75rem 1.5rem;
-            background: linear-gradient(to right, #6c757d, #5a6268, #495057);
-            background-size: 200% 100%;
-            color: #fff;
+            margin-top: auto;
+            font-weight: 600;
+            padding: 0.6rem 1.8rem;
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
             border-radius: 50px;
-            text-align: center;
+            transition: all 0.3s ease;
+            align-self: flex-start;
+            font-size: 0.9rem;
+            text-decoration: none;
         }
 
         .project-link:hover {
-            background-position: right center;
+            background: var(--primary-color);
+            color: #fff;
         }
 
-        /* --- Contact Section --- */
-        #contact p {
-            text-align: center;
-            font-size: 1.2rem;
-            max-width: 600px;
-            margin: 0 auto 2rem auto;
-        }
-
+        /* --- Contact --- */
         .contact-button {
             display: block;
             width: fit-content;
             margin: 0 auto;
-            background: linear-gradient(to right, #6c757d, #5a6268, #495057);
-            background-size: 200% 100%;
+            background: var(--primary-color);
             color: #fff;
-            padding: 1rem 2.5rem;
+            padding: 1.2rem 3.5rem;
             border-radius: 50px;
-            font-family: var(--heading-font);
-            font-size: 1.1rem;
-            font-weight: bold;
-            transition: background-position 0.3s, transform 0.3s;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
         }
 
         .contact-button:hover {
-            background-position: right center;
-            transform: translateY(-3px);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
-        /* --- Footer --- */
         footer {
             text-align: center;
-            padding: 2rem;
-            background: #333;
-            color: #fff;
+            padding: 3rem;
+            background: var(--secondary-color);
+            font-size: 0.9rem;
         }
 
-        /* --- Fade-in Animation --- */
         .fade-in-element {
             opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
         }
 
         .fade-in-element.is-visible {
@@ -509,111 +515,47 @@
             transform: translateY(0);
         }
 
-
-        /* --- Responsive Design --- */
-        @media(max-width: 992px) {
-            .synergy-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
         @media(max-width: 768px) {
-            h1 { font-size: 2.5rem; }
-            #hero {
-                grid-template-columns: 1fr;
-                height: auto;
-                padding: 10rem 2rem 5rem 2rem;
-                text-align: center;
-            }
-            .hero-image {
-                margin-bottom: 2rem;
-            }
-            .hero-image img {
-                transform: none; /* Remove rotation on mobile */
-            }
-            .hero-content {
-                text-align: center;
-            }
-            #hero h1 { font-size: 3rem; }
-            #hero p { font-size: 1.2rem; }
-
-            #navbar {
-                flex-direction: column;
-                padding: 0.5rem 1rem;
-            }
-            #navbar .logo { margin-bottom: 0.5rem; }
-            #navbar ul { flex-direction: row; }
-            #navbar ul li a { padding: 0.5rem; font-size: 0.8rem; }
-            body { padding-top: 100px; } /* Adjusted padding for taller navbar */
-
-            #experience .timeline::after {
-                left: 31px;
-            }
-            .timeline-item {
-                width: 100%;
-                padding-left: 70px;
-                padding-right: 25px;
-            }
-
-            .timeline-item::before {
-                left: 60px;
-                border: medium solid white;
-                border-width: 10px 10px 10px 0;
-                border-color: transparent white transparent transparent;
-            }
-            .timeline-left::after, .timeline-right::after {
-                left: 15px;
-            }
-            .timeline-right {
-                left: 0%;
-            }
-
-            .cursor, .sparkle {
-                display: none;
-            }
-            body {
-                cursor: auto;
-            }
-            a, button, .logo img {
-                cursor: pointer;
-            }
+            #hero { grid-template-columns: 1fr; padding-top: 100px; text-align: center; }
+            .hero-content { padding-left: 0; }
+            #experience .timeline::after { left: 20px; }
+            .timeline-item { width: 100%; padding-left: 50px; padding-right: 0; text-align: left; }
+            .timeline-item::after { left: 14px; top: 34px; }
+            .timeline-right { left: 0; }
+            .synergy-grid { grid-template-columns: 1fr; }
+            .cursor-dot, .cursor-outline { display: none; }
+            body { cursor: auto; }
         }
     </style>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-    <div class="cursor"></div>
-    <div class="sparkle"></div>
-    <div class="sparkle"></div>
-    <div class="sparkle"></div>
-    <div class="sparkle"></div>
-    <div class="sparkle"></div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
 
     <nav id="navbar">
         <div class="logo">
             <img src="Logo Rounded B&W.png" alt="Aditya Sethi Logo">
         </div>
         <ul>
-            <li><a href="#hero">Home</a></li>
-            <li><a href="#experience">Experience</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#synergy">Synergy</a></li>
+            <li><a href="#hero" class="nav-link">Home</a></li>
             <li><a href="./University.html" id="undergrad-link">Undergrad</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="#projects" class="nav-link">Projects</a></li>
+            <li><a href="#experience" class="nav-link">Experience</a></li>
             <li><button id="theme-toggle"><i class="fas fa-sun"></i></button></li>
         </ul>
     </nav>
 
     <header id="hero">
         <div class="hero-image">
-            <img src="IMG_2622.jpeg" alt="A professional photo of Aditya Sethi">
+            <img src="IMG_2622.jpeg" alt="Aditya Sethi Profile">
         </div>
         <div class="hero-content">
             <h1>Aditya Sethi</h1>
-            <div class="social-links" style="margin-top: 1.5rem;">
-                <a href="https://linkedin.com/in/sethiaditya3" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-                <a href="#" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            <p>Bridging economics, technology, and strategy to build systems that work for everyone.</p>
+            <div class="social-links">
+                <a href="https://linkedin.com/in/sethiaditya3" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="#"><i class="fab fa-github"></i></a>
             </div>
         </div>
     </header>
@@ -623,52 +565,31 @@
             <div class="container">
                 <h2>Experience</h2>
                 <div class="timeline">
-                    <div class="timeline-item timeline-left">
-                        <div class="timeline-content">
-                            <span class="date">In Incubation</span>
-                            <p class="company">Stealth Company</p>
-                            <h3>Founder</h3>
-                            <p class="description">Currently building a new venture in stealth mode, backed by senior individuals.</p>
-                        </div>
-                    </div>
+                    <!-- Deutsche Bank -->
                     <div class="timeline-item timeline-right">
                         <div class="timeline-content">
-                            <span class="date">April 2025 - Present</span>
-                            <p class="company">Deutsche Bank</p>
-                            <h3>Analyst</h3>
-                            <p class="description">Developing an individual initiative to automate processes within the division.</p>
+                            <span class="date">APR 2025 - PRESENT</span>
+                            <div class="company">Deutsche Bank</div>
+                            <h3>Investment Services</h3>
+                            <p class="description">Developing an individual initiative to automate core processes within the division to drive operational efficiency.</p>
                         </div>
                     </div>
+                    <!-- AECOM -->
                     <div class="timeline-item timeline-left">
                         <div class="timeline-content">
-                            <span class="date">November 2024 - January 2025 (3 mos)</span>
-                            <p class="company">Landmark Group</p>
-                            <h3>Chief Strategy Office</h3>
-                            <p class="description">Worked on high-level strategy initiatives across Landmark's flagship brands - Lifestyle, Max & HomeCentre.</p>
+                            <span class="date">FEB 2024 - APR 2024</span>
+                            <div class="company">AECOM Canada</div>
+                            <h3>Enterprise Capabilities</h3>
+                            <p class="description">Reported to the Global Head of Operations. Strategized talent offshoring frameworks for North American (NAM) & Latin American (LAM) markets.</p>
                         </div>
                     </div>
-                      <div class="timeline-item timeline-right">
+                    <!-- NITI Aayog -->
+                    <div class="timeline-item timeline-right">
                         <div class="timeline-content">
-                            <span class="date">February 2024 - April 2024 (3 mos)</span>
-                            <p class="company">AECOM Canada</p>
-                            <h3>Analyst - Enterprise Strategy</h3>
-                            <p class="description">Supported the enterprise strategy team with analysis and research.</p>
-                        </div>
-                    </div>
-                    <div class="timeline-item timeline-left">
-                        <div class="timeline-content">
-                            <span class="date">June 2023 - July 2023 (2 mos)</span>
-                            <p class="company">NITI Aayog, Government of India</p>
+                            <span class="date">JUN 2023 - JUL 2023</span>
+                            <div class="company">NITI Aayog, Government of India</div>
                             <h3>Economics, Finance & G20 India</h3>
-                            <p class="description">Gained exposure to high-level economic policy, trade deals, and foreign delegations.</p>
-                        </div>
-                    </div>
-                    <div class="timeline-item timeline-right">
-                        <div class="timeline-content">
-                            <span class="date">February 2023 - April 2023 (3 mos)</span>
-                            <p class="company">HSBC Canada | AGS Group </p>
-                            <h3>Recruiting - Commercial Banking</h3>
-                            <p class="description">Supported the end-to-end commercial banking recruitment process.</p>
+                            <p class="description">Immersed in high-level economic policy and trade deal development during India’s G20 Presidency, engaging with international delegations.</p>
                         </div>
                     </div>
                 </div>
@@ -677,32 +598,33 @@
 
         <section id="projects" class="section-dark fade-in-element">
             <div class="container">
-                <h2>My Projects</h2>
+                <h2>Selected Projects</h2>
                 <div class="projects-grid">
+                    <!-- Ola -->
                     <div class="project-card">
-                        <img src="Ola.jpeg" alt="Ola Cabs Logo">
+                        <img src="Ola.jpeg" alt="Ola Honking Project">
                         <div class="project-card-content">
-                            <h3>Ola | Honking Minimization Project</h3>
-                            <p>Worked directly with founder Bhavish Aggarwal in 2018 to conceptualize a strategy for minimizing honking in India by leveraging Ola's vast platform and data.</p>
-                            <a href="#" target="_blank" class="project-link">View Case Study</a>
+                            <h3>Ola | Honking Minimization</h3>
+                            <p>Collaborated directly with Bhavish Aggarwal in 2018 to conceptualize a data-driven strategy for minimizing honking in Bangalore, leveraging Ola’s platform and driver telemetrics.</p>
+                            <a href="#" class="project-link">View Strategy</a>
                         </div>
                     </div>
-
+                    <!-- UBC Research -->
                     <div class="project-card">
-                        <img src="VSE.jpeg" alt="UBC Vancouver School of Economics Logo">
+                        <img src="VSE.jpeg" alt="UBC Economics Research">
                         <div class="project-card-content">
                             <h3>Economic Research Model</h3>
-                            <p>A binary regression model analyzing post-budget outlier returns on the Sensex over 15 years.</p>
-                            <a href="#" target="_blank" class="project-link">View Research</a>
+                            <p>Authored research at UBC's International Economics program. Ran a binary linear regression model on 15 years of archive Sensex data to analyze post-budget market behaviors.</p>
+                            <a href="#" class="project-link">View Research</a>
                         </div>
                     </div>
-
+                    <!-- Startup20 -->
                     <div class="project-card">
-                        <img src="https://via.placeholder.com/400x200/dee2e6/333?text=Project+3" alt="Project 3 Screenshot">
+                        <img src="https://via.placeholder.com/400x225/333/eee?text=Startup20" alt="G20 Startup20">
                         <div class="project-card-content">
-                            <h3>Project Name 3</h3>
-                            <p>A brief, one or two-sentence description of your project. What did you learn?</p>
-                            <a href="#" target="_blank" class="project-link">Read Case Study</a>
+                            <h3>Startup20 G20 India</h3>
+                            <p>An exploration of the human capital and hosting ecosystem behind Startup20. Focusing on the hosts and innovators driving the G20 entrepreneurial agenda.</p>
+                            <a href="#" class="project-link">Read More</a>
                         </div>
                     </div>
                 </div>
@@ -719,29 +641,26 @@
                     <div class="synergy-card">
                         <div class="icon"><i class="fas fa-globe-americas"></i></div>
                         <h3>Global Frameworks</h3>
-                        <p>By immersing in 14 countries—from observing policy at the UN in New York to understanding community in Toronto—I've learned to see the world not as a single market, but as a mosaic of cultural systems.</p>
+                        <p>By immersing in 14 countries—from observing policy at the UN in New York to understanding community in Toronto—I've learned to see the world as a mosaic of cultural systems.</p>
                     </div>
                     <div class="synergy-card">
                         <div class="icon"><i class="fas fa-book-open"></i></div>
                         <h3>Intellectual Synthesis</h3>
-                        <p>Studying Economics, Philosophy, and Computer Science provides the tools to deconstruct a problem from first principles and see the common objective hidden beneath conflicting expert opinions.</p>
+                        <p>Studying Economics, Philosophy, and Computer Science provides the tools to deconstruct problems from first principles and see the common objective hidden beneath conflicting opinions.</p>
                     </div>
                     <div class="synergy-card">
                         <div class="icon"><i class="fas fa-project-diagram"></i></div>
                         <h3>Action through Network</h3>
-                        <p>True synthesis happens when ideas are tested in the real world. Engaging with diplomats, founders, and investors is how I translate theory into tangible, collaborative ventures.</p>
+                        <p>Synthesis happens when ideas are tested in the real world. Engaging with diplomats, founders, and investors translates theory into tangible, collaborative ventures.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-
         <section id="contact" class="section-dark fade-in-element">
             <div class="container">
                 <h2>Get In Touch</h2>
-                <p>
-                    I'm always open to connecting with innovative people and discussing new ideas. Feel free to reach out!
-                </p>
+                <p style="text-align: center;">Always open to discussing new ideas, strategy, and collaborative ventures.</p>
                 <a href="mailto:adisethilk2@gmail.com" class="contact-button">Say Hello</a>
             </div>
         </section>
@@ -752,86 +671,41 @@
     </footer>
 
     <script>
-        // --- Smooth Scrolling for Nav Links ---
-        document.querySelectorAll('#navbar a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
+        // --- Refined Cursor Logic ---
+        const dot = document.querySelector('.cursor-dot');
+        const outline = document.querySelector('.cursor-outline');
 
-                const headerOffset = document.getElementById('navbar').offsetHeight;
-                let elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerOffset;
-
-                 if (targetId === '#hero') {
-                    elementPosition = 0;
-                }
-
-                window.scrollTo({
-                    top: elementPosition,
-                    behavior: "smooth"
-                });
-            });
+        window.addEventListener('mousemove', (e) => {
+            dot.style.left = `${e.clientX}px`;
+            dot.style.top = `${e.clientY}px`;
+            outline.animate({
+                left: `${e.clientX}px`,
+                top: `${e.clientY}px`
+            }, { duration: 500, fill: "forwards" });
         });
 
-        // --- Custom Cursor & Sparkle Logic ---
-        const cursor = document.querySelector('.cursor');
-        const sparkles = document.querySelectorAll('.sparkle');
-
-        const coords = { x: 0, y: 0 };
-        const sparkleCoords = Array.from(sparkles).map(() => ({ x: 0, y: 0 }));
-
-        window.addEventListener('mousemove', e => {
-            coords.x = e.clientX;
-            coords.y = e.clientY;
+        document.querySelectorAll('a, button, .project-card, .logo img, .synergy-card').forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('cursor-active'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-active'));
         });
 
-        function animateSparkles() {
-            let x = coords.x;
-            let y = coords.y;
-
-            cursor.style.left = x + 'px';
-            cursor.style.top = y + 'px';
-
-            sparkleCoords.forEach((sparkle, index) => {
-                const nextSparkle = sparkleCoords[index + 1] || coords;
-                sparkle.x += (nextSparkle.x - sparkle.x) * 0.3;
-                sparkle.y += (nextSparkle.y - sparkle.y) * 0.3;
-
-                sparkles[index].style.left = sparkle.x + 'px';
-                sparkles[index].style.top = sparkle.y + 'px';
-                sparkles[index].style.opacity = (sparkles.length - index) / sparkles.length;
+        // --- Active Scroll Spy ---
+        const sections = document.querySelectorAll('section, header');
+        const navLinks = document.querySelectorAll('.nav-link');
+        window.addEventListener('scroll', () => {
+            let current = "";
+            sections.forEach(section => {
+                if (pageYOffset >= section.offsetTop - 100) { current = section.getAttribute('id'); }
             });
-
-            requestAnimationFrame(animateSparkles);
-        }
-
-        animateSparkles();
-
-        // Update selector to include logo image for hover effect
-        document.querySelectorAll('a, button, #theme-toggle, .logo img').forEach(el => {
-            el.addEventListener('mouseover', () => {
-                cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
-            });
-            el.addEventListener('mouseout', () => {
-                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
-            });
-        });
-
-        // --- Fade-in on Scroll Logic ---
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') && link.getAttribute('href').includes(current)) { 
+                    link.classList.add('active'); 
                 }
             });
-        }, {
-            threshold: 0.1 // Trigger when 10% of the element is visible
         });
 
-        const elementsToFadeIn = document.querySelectorAll('.fade-in-element');
-        elementsToFadeIn.forEach((el) => observer.observe(el));
-
-        // --- Light/Dark/Afternoon Mode Logic ---
+        // --- Theme Toggle ---
         const themeToggle = document.getElementById('theme-toggle');
         const themeIcon = themeToggle.querySelector('i');
         const themes = ['light', 'dark', 'afternoon'];
@@ -839,44 +713,33 @@
 
         const applyTheme = (theme) => {
             document.body.classList.remove('light-mode', 'dark-mode', 'afternoon-mode');
-            if(theme !== 'light') { // light is default, no class needed
-                 document.body.classList.add(theme + '-mode');
-            }
+            if(theme !== 'light') document.body.classList.add(theme + '-mode');
             localStorage.setItem('theme', theme);
-
-            if (theme === 'light') {
-                themeIcon.className = 'fas fa-sun';
-            } else if (theme === 'dark') {
-                themeIcon.className = 'fas fa-moon';
-            } else {
-                themeIcon.className = 'fas fa-cloud-sun';
-            }
+            themeIcon.className = theme === 'light' ? 'fas fa-sun' : theme === 'dark' ? 'fas fa-moon' : 'fas fa-cloud-sun';
         };
 
-        // Set initial theme
         applyTheme(currentTheme);
-
         themeToggle.addEventListener('click', () => {
-            let currentIndex = themes.indexOf(currentTheme);
-            let nextIndex = (currentIndex + 1) % themes.length;
+            let nextIndex = (themes.indexOf(currentTheme) + 1) % themes.length;
             currentTheme = themes[nextIndex];
             applyTheme(currentTheme);
         });
-        
-        // --- Page Transition Logic ---
+
+        // --- Observer ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('is-visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in-element').forEach(el => observer.observe(el));
+
+        // --- Undergrad Link Transition ---
         const undergradLink = document.getElementById('undergrad-link');
-        undergradLink.addEventListener('click', function(e) {
-            e.preventDefault(); // Stop the link from navigating immediately
-            const destination = this.href;
-
-            document.body.classList.add('page-fade-out'); // Apply the fade-out animation
-
-            setTimeout(() => {
-                window.location.href = destination; // Navigate after the animation
-            }, 300); // This duration should match the animation time
-        });
-
+        if (undergradLink) {
+            undergradLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.body.classList.add('page-fade-out');
+                setTimeout(() => { window.location.href = this.href; }, 300);
+            });
+        }
     </script>
-
 </body>
 </html>
