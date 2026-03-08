@@ -164,10 +164,18 @@
             align-items: center;
         }
 
-        .viewer-container {
-            flex-grow: 1;
-            background: #f0f0f0;
-        }
+       /* This ensures the individual viewer divs fill the card height */
+#presentation-viewer, #paper-viewer {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.viewer-container {
+    flex-grow: 1;
+    background: #f0f0f0;
+    line-height: 0; /* Removes tiny gaps at the bottom of the iframe */
+}
 
         iframe {
             width: 100%;
